@@ -1,5 +1,6 @@
 <?php
 
+use Discord\Builders\MessageBuilder;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use src\GameStatsBot;
@@ -34,17 +35,30 @@ $discord->on('ready', function ($discord) {
             $args = explode(' ', substr($message->content, strlen(COMMAND_PREFIX)));
             $command = array_shift($args);
 
+            if (empty($command) || empty($args)) {
+                $message->channel->sendMessage('Il manque des arguments !');
+            }
+
             switch ($command) {
                 case 'fortnite-stats':
                     $player = implode(' ', $args);
                     $forniteStats = new GameStatsBot();
                     $forniteStats->setGameStatsStrategy(new FortniteStats());
 
-                    $message->channel->sendMessage($forniteStats->getStats($player));
+                    $imagePath = $forniteStats->getStats($player);
                     break;
 
                 default:
                     return;
+            }
+
+            if (file_exists($imagePath)) {
+                $message->channel->sendMessage(
+                    (new MessageBuilder())
+                        ->addFile($imagePath, 'FortniteStats.png')
+                );
+            } else {
+                $message->channel->sendMessage('Erreur lors de la génération des statistiques.');
             }
         }
     });
