@@ -13,7 +13,7 @@ class GameStatsBot
         $this->gameStatsStrategy = $strategy;
     }
 
-    public function getStats(string $player): string {
+    public function getStats(mixed $player): string {
         return $this->gameStatsStrategy->getStats($player);
     }
 }

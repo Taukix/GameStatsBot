@@ -26,7 +26,7 @@ class FortniteStats implements GameStatsStrategy
     private const PLAYER_STAT_SQUAD_X = 535;
     private const PLAYER_STAT_SQUAD_Y = 620;
 
-    public function getStats(string $player): string
+    public function getStats(mixed $player): string
     {
         $url = "https://fortnite-api.com/v2/stats/br/v2?name=" . urlencode($player);
 
@@ -49,8 +49,6 @@ class FortniteStats implements GameStatsStrategy
         curl_close($ch);
 
         switch ($httpCode) {
-            case 400:
-                return "Le nom du joueur est invalide";
             case 403:
                 return "Les stats du joueur sont privées";
             case 404:

@@ -36,7 +36,7 @@ $discord->on('ready', function ($discord) {
             $command = array_shift($args);
 
             if (empty($command) || empty($args)) {
-                $message->channel->sendMessage('Il manque des arguments !');
+                $message->channel->sendMessage('Il manque le nom du joueur !');
             }
 
             switch ($command) {
@@ -58,7 +58,7 @@ $discord->on('ready', function ($discord) {
                         ->addFile($imagePath, 'FortniteStats.png')
                 );
             } else {
-                $message->channel->sendMessage('Erreur lors de la génération des statistiques.');
+                $message->channel->sendMessage($imagePath);
             }
         }
     });
