@@ -1,67 +1,42 @@
 <?php
 
-use Discord\Builders\MessageBuilder;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
-use src\GameStatsBot;
-use src\strategy\FortniteStats;
+use Discord\WebSockets\Intents;
+use src\command\FortniteStatsCommand;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/key.php';
 
 $key = getKey();
-
-const GENERAL_CHANNEL_NAME = 'fortnite';
-const COMMAND_PREFIX = '/';
+const FORTNITE_STATS_COMMAND_NAME = 'fortnite-stats';
 
 try {
     $discord = new Discord([
         'token' => $key,
+        'intents' => [
+            Intents::GUILDS
+        ],
     ]);
 } catch (IntentException $e) {
     echo $e->getMessage();
     exit(1);
 }
 
+echo $discord->guilds->count();
+echo PHP_EOL;
+echo $discord->application->commands->count();
+echo PHP_EOL;
+
+$discord->on('init', function ($discord) {
+    echo 'Bot is initializing...', PHP_EOL;
+    new FortniteStatsCommand($discord);
+});
+
 $discord->on('ready', function ($discord) {
     echo "Bot is ready!", PHP_EOL;
 
-    $discord->on('message', function ($message, $discord) {
-        if ($message->channel->name !== GENERAL_CHANNEL_NAME) {
-            return;
-        }
-
-        if (str_starts_with($message->content, COMMAND_PREFIX)) {
-            $args = explode(' ', substr($message->content, strlen(COMMAND_PREFIX)));
-            $command = array_shift($args);
-
-            if (empty($command) || empty($args)) {
-                $message->channel->sendMessage('Il manque le nom du joueur !');
-            }
-
-            switch ($command) {
-                case 'fortnite-stats':
-                    $player = implode(' ', $args);
-                    $forniteStats = new GameStatsBot();
-                    $forniteStats->setGameStatsStrategy(new FortniteStats());
-
-                    $imagePath = $forniteStats->getStats($player);
-                    break;
-
-                default:
-                    return;
-            }
-
-            if (file_exists($imagePath)) {
-                $message->channel->sendMessage(
-                    (new MessageBuilder())
-                        ->addFile($imagePath, 'FortniteStats.png')
-                );
-            } else {
-                $message->channel->sendMessage($imagePath);
-            }
-        }
-    });
+    FortniteStatsCommand::listen($discord);
 });
 
 $discord->run();

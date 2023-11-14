@@ -3,7 +3,8 @@
     "php": "^8.2",
     "php-ds/php-ds": "^1.4",
     "ext-readline": "*",
-    "team-reflex/discord-php": "^7.3"
+    "team-reflex/discord-php": "^7.3",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-4": {

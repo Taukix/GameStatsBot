@@ -36,7 +36,7 @@ class GameStatsBotTest extends TestCase
     #[Test]
     public function shoud_return_private_player_message(): void
     {
-        $player = 'tasoeur';
+        $player = 'Not Tauk';
         $forniteStats = new GameStatsBot();
         $forniteStats->setGameStatsStrategy(new FortniteStats());
 

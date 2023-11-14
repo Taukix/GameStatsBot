@@ -48,7 +48,11 @@ class FortniteStats implements GameStatsStrategy
 
         curl_close($ch);
 
+        echo $httpCode;
+
         switch ($httpCode) {
+            case 400:
+                return "Le nom du joueur est invalide";
             case 403:
                 return "Les stats du joueur sont privées";
             case 404:
