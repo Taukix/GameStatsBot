@@ -13,7 +13,6 @@ use src\strategy\FortniteStats;
 
 class FortniteStatsCommand implements Command
 {
-
     /**
      * @throws Exception
      */
@@ -56,6 +55,7 @@ class FortniteStatsCommand implements Command
     {
         $discord->listenCommand(FORTNITE_STATS_COMMAND_NAME, function (Interaction $interaction) {
             $player = $interaction->data->options['player']->value;
+
             $forniteStats = new GameStatsBot();
             $forniteStats->setGameStatsStrategy(new FortniteStats());
 

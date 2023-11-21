@@ -23,11 +23,6 @@ try {
     exit(1);
 }
 
-echo $discord->guilds->count();
-echo PHP_EOL;
-echo $discord->application->commands->count();
-echo PHP_EOL;
-
 $discord->on('init', function ($discord) {
     echo 'Bot is initializing...', PHP_EOL;
     new FortniteStatsCommand($discord);
